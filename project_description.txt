@@ -1,0 +1,9 @@
+Bailey, Josh, Shalei, Xiaowen
+
+Food Schedule Helper App - Primary
+
+For this project idea, the problem we are trying to solve is being able to eat or get food while having a busy schedule. The application will allow users to input their schedules and preferences for wait time, cost of food, and quality of food. Afterwards, the application will generate an optimal route for the user to follow throughout the day including the food stops along the way. This application is intended for college students living in cities. The database will be used to keep track of user data. The two API’s as of now that we intend to use will be Flask and Yelp Fusion. Since we will be using Flask, we use Google Oauth2 authentication with Flask-Dance for our third-party authentication.
+
+eBU Advisor - Secondary
+
+For this project idea, we are trying to help BU students keep track of their graduation requirements without needing to set up an appointment with a course advisor. The application will allow students to input certain preferences such as professors, time periods, and major requirements, and then generate possible schedule options. The intended user for this application is a BU student, however, this can be expanded into other schools as well. The database will be used to keep track of user data. The two API’s as of now that we intend to use will be Flask and SuperSaaS. Since we will be using Flask, we use Google Oauth2 authentication with Flask-Dance for our third-party authentication.
