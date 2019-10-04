@@ -1,0 +1,6 @@
+- As a user, I need a google account to sign in this Web app. [Account Creation]
+- As a logged-in user, I want to make sure that I confirm my phone number via text messages, so the application will alert valid phone numbers. [Phone Confirmation]
+- As a logged-in user, I want the website to know where I am based on the wifi. This will be possible through allowing the web app to track the location. [Location Services]
+- As a user, I need to be able to login in order to use the features provided. [Required Authorization]
+- As a logged-in user, in case of an error or null match with preferences, recommend broadening preferences for their current search. [Search Failure Response]
+- As a logged-in user, I want the app to send text alerts to remind me when I’ll be nearing a stopping point. This is essential to making the web application more functional and helpful in terms of reminding students to eat and maintain a “healthy” diet. [Text Alert]
