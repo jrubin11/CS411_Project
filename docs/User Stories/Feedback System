@@ -1,0 +1,2 @@
+As a logged-in user, I want to confirm whether I have followed the application's recommendation, and send feedback to the web to build personal user preference and user history.
+If the user visited the restaurant, the app will request how long they waited and to give the restaurant a rating. Also, if the user complains that the actual waiting time was too long. The website will record the information.  However, the user can always bypass giving feedback.
