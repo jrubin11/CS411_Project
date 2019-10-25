@@ -40,3 +40,5 @@ def result():
       s = (f'Name: {j["name"]}, Rating: {j["rating"]}, Phone: {j["phone"]}, Location: {j["location"]["address1"]}' for j in response.json()['businesses'])
       return render_template("result.html",result = s)
 
+if __name__ == '__main__':
+    app.run(debug=True)
