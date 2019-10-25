@@ -1,0 +1,6 @@
+Tech Stack Choice
+Shalei, Bailey, Josh, Xiaowen
+
+For our team, we use Flask to call the Yelp API we need and use HTML for the front end. 
+The majority of our team members are more familiar with Python, so a framework written in Python would be our first choice. 
+The primal reason for us to choose Flask is that one of our teammates has former experience using Flask, so all the members in our team can learn the framework more efficient.
