@@ -1,10 +1,58 @@
 <!doctype html>
 <html>
-   <body>
-	{% for key in result  %}
-    		<ul style="list-style-type:none">
-      			<li>{{ key }}</li>
-    		</ul>
-  	{% endfor %}
-   </body>
+<head>
+<style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+      width: 12.5%;
+    }
+</style>
+</head>
+<body>
+    <table>
+        <tr>
+            <th>Time</th>
+            <th>Sunday</th>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+            <th>Saturday</th>
+        </tr>
+        {% for key in result  %}
+            <tr>
+            {% for i in key  %}
+            
+            <td>{{ i }}</td>
+            
+            {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+    <form action = "http://localhost:5000/result" method = "POST">
+       Event Name<input type = "text" name = "name" required/>
+       Location<input type = "text" name = "location" required/>
+       Day of Week<select name="day">
+         <option value="sunday">Sunday</option>
+         <option value="monday">Monday</option>
+         <option value="tuesday">Tuesday</option>
+         <option value="wednesday">Wednesday</option>
+         <option value="thursday">Thursday</option>
+         <option value="friday">Friday</option>
+         <option value="saturday">Saturday</option>
+       </select>
+       Start Time<input type = "number" name = "start_time" min="0" max="23"required/>
+       End Time<input type = "number" name = "end_time" min="0" max="23"required/><br>
+       <input type = "submit" value = "Add Event" />
+    </form>
+</body>
 </html>
