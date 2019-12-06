@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from flask_dance.contrib.google import make_google_blueprint, google
 from oauthlib.oauth2.rfc6749.errors import InvalidGrantError, TokenExpiredError, OAuth2Error
 import os
+from flask_sqlalchemy import SQLAlchemy
 
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
@@ -33,14 +34,24 @@ headers = {
     'Connection': "keep-alive",
     'cache-control': "no-cache"
     }
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+db = SQLAlchemy(app)
 
+class User(db.Model):
 
-'''
-for i in response.json():
-    for j in (response.json()[i]):
-        print(j["name"] + ': ' + j["price"] + ', ' + str(j["rating"]) + ', ' + j["phone"] + ', ' + j["location"]["address1"])        
-    break
-'''
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(200), nullable=False)
+
+class Event(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = location = db.Column(db.String(200), nullable=False)
+    location = db.Column(db.String(200), nullable=False)
+    start_time = db.Column(db.Integer, nullable=False)
+    end_time = db.Column(db.Integer, nullable=False)
+    day = db.Column(db.String(200), nullable=False)
+    email = db.Column(db.String(200), nullable=False)
+
 
 app.register_blueprint(blueprint, url_prefix="/login")
 
@@ -49,13 +60,21 @@ def index():
     if not google.authorized:
         return redirect(url_for("google.login"))
 
-
-
     try:
-        resp = google.get("/plus/v1/people/me")
+        resp = google.get("/oauth2/v1/userinfo")
+        email = resp.json()['email']
         #assert resp.ok, resp.text
     except (InvalidGrantError, TokenExpiredError) as e:  # or maybe any OAuth2Error
         return redirect(url_for("google.login"))
+    user = User.query.filter_by(email=email).first()
+
+    try:
+        if user==None:
+            new_user = User(email=email)
+            db.session.add(new_user)
+            db.session.commit()
+    except:
+        return f'There was an issue adding your user'
     return redirect(url_for('student'))
 
 
@@ -74,13 +93,35 @@ def student():
 
 @app.route('/result',methods = ['POST', 'GET'])
 def result():
+    days={'sunday':1,'monday':2,'tuesday':3,'wednesday':4,'thursday':5,'friday':6,'saturday':7}
+    try:
+        resp = google.get("/oauth2/v1/userinfo")
+        email = resp.json()['email']
+    #assert resp.ok, resp.text
+    except (InvalidGrantError, TokenExpiredError) as e:  # or maybe any OAuth2Error
+        return redirect(url_for("google.login"))
     if request.method == 'POST':
+        
         result = request.form
-        querystring = {"location":"boston"}
-        querystring['term'] = result['search']
-        response = requests.request("GET", url, headers=headers, params=querystring)
-        s = (f'Name: {j["name"]}, Rating: {j["rating"]}, Phone: {j["phone"]}, Location: {j["location"]["address1"]}' for j in response.json()['businesses'])
-        return render_template("result.html",result = s)
+        event = Event(name=result['name'],location=result['location'],start_time=result['start_time'],end_time=result['end_time'],day=result['day'],email=email)
+        db.session.add(event)
+        db.session.commit()
+    table=[[str(i)+' hr','','','','','','',''] for i in range(24)]
+    events = Event.query.filter_by(email=email).all()
+    for i in events:
+        table[i.start_time][days[i.day]]=i.name
+    
+        
+    return render_template("result.html",result = table)
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+"""for i in range(7):
+    for j in range(24):
+        
+
+querystring = {"location":"boston"}
+querystring['term'] = result['search']
+response = requests.request("GET", url, headers=headers, params=querystring)
+s = (f'Name: {j["name"]}, Rating: {j["rating"]}, Phone: {j["phone"]}, Location: {j["location"]["address1"]}' for j in response.json()['businesses'])"""
