@@ -1,11 +1,39 @@
 <html>
-	<p style="color:#003399;font-size:18px;font-weight:bold;text-align:center;">Welcome VarName!</p>
+	<br><br><br><br><br>
+
+	<p style="color:#000000;font-size:90px;font-weight:900;text-align:center;">Group 2 Food </p>
+	<p style="color:#000000;font-size:30px;font-weight:bold;text-align:center;">Welcome to your homepage!</p>
+
    <body>
-	<input type="button" onclick="location.href='/app_logout';" style="display: inline-block; margin-left: 650px; margin-right: auto;" value="Input Schedule" >
-	<input type="button" onclick="location.href='/app_logout';" style="display: inline-block; margin-left: auto; margin-right: auto;" value="View Food Options" /><br>
+	<br><br>
+	<div id="container">
+		<button type="button input-button" onclick="location.href='/app_event';" id="button1" >Input Schedule</button>
+		<button type="button options-button" onclick="location.href='/app_result';" id="button2">View Food Options</button>
+	</div>
 	
 	
 	<input type="button" onclick="location.href='/app_logout';" style="display: block; position: absolute; bottom: 20px; right: 20px" value="Logout" /><br>
    </body>
-   
+   	<style>
+		body{
+			background-image: url("background1.jfif");
+			background-repeat: no-repeat;
+			background-size: cover;
+			background-position: center;
+			background-color: #e2e2e2;
+		}
+		#container{
+			text-align: center;
+		}
+
+		#button1{
+			width: 300px;
+			height: 40px;
+		}		
+
+		#button2{
+			width: 300px;
+			height: 40px;
+		}
+   </style>
 </html>
