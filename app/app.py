@@ -121,7 +121,7 @@ if __name__ == '__main__':
     for j in range(24):
         
 
-querystring = {"location":"boston"}
+querystring = querystring = {"location":"%20775%20commonwealth%20Ave,%20boston,%20MA%20%2002215","open_at":"1575821730","radius":"400"}
 querystring['term'] = result['search']
 response = requests.request("GET", url, headers=headers, params=querystring)
 s = (f'Name: {j["name"]}, Rating: {j["rating"]}, Phone: {j["phone"]}, Location: {j["location"]["address1"]}' for j in response.json()['businesses'])"""
