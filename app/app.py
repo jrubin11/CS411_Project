@@ -92,6 +92,7 @@ def student():
     if not google.authorized:
         return redirect(url_for("google.login"))
     return render_template('homepage.html')
+<<<<<<< HEAD
     
     
 @app.route('/food')
@@ -130,7 +131,6 @@ def food():
         for j in range(len(locations[i])):
             foods[days2[i]]+=[{'location':locations[i][j][2],'places':locations[i][j][3]}]
     return render_template('food.html',days=foods)
-    
 
 @app.route('/result',methods = ['POST', 'GET'])
 def result():
@@ -170,7 +170,11 @@ if __name__ == '__main__':
     for j in range(24):
         
 
+<<<<<<< HEAD
 querystring = {"location":str(, "radius": 100}
+=======
+querystring = querystring = {"location":"%20775%20commonwealth%20Ave,%20boston,%20MA%20%2002215","open_at":"1575821730","radius":"400"}
+>>>>>>> f729621cb3c31e21b10601fb058396375d9e593b
 querystring['term'] = result['search']
 querystring['radius'] = 100
 response = requests.request("GET", url, headers=headers, params=querystring)
