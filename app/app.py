@@ -89,7 +89,7 @@ def logout():
 def student():
     if not google.authorized:
         return redirect(url_for("google.login"))
-    return render_template('search.html')
+    return render_template('homepage.html')
 
 @app.route('/result',methods = ['POST', 'GET'])
 def result():
