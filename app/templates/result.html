@@ -7,13 +7,30 @@
       border-collapse: collapse;
       width: 100%;
     }
-
+	
+	body{
+		background-color: #e2e2e2;
+	}
+	
     td, th {
       border: 1px solid #dddddd;
       text-align: left;
       padding: 8px;
       width: 12.5%;
     }
+	
+	#container{
+			display: inline-block;
+			text-align: right;
+		}
+
+	#button1{
+		width: 100px;
+	}		
+
+	#button2{
+		width: 150px;
+	}
 </style>
 </head>
 <body>
@@ -54,5 +71,11 @@
        End Time<input type = "number" name = "end_time" min="0" max="23"required/><br>
        <input type = "submit" value = "Add Event" />
     </form>
+	<div id="container">	
+		<button type="button input-button" onclick="location.href='/';" id="button1" >Home</button>
+		<button type="button options-button" onclick="location.href='/food';" id="button2">Show Food Options</button>
+		<button type="button logout-button" onclick="location.href='/app_logout';" id="button1">Logout</button>
+
+	</div>
 </body>
 </html>
