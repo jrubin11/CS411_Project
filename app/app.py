@@ -92,7 +92,6 @@ def student():
     if not google.authorized:
         return redirect(url_for("google.login"))
     return render_template('homepage.html')
-<<<<<<< HEAD
     
     
 @app.route('/food')
