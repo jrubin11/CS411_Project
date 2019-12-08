@@ -51,8 +51,17 @@
          <option value="saturday">Saturday</option>
        </select>
        Start Time<input type = "number" name = "start_time" min="0" max="23"required/>
-       End Time<input type = "number" name = "end_time" min="0" max="23"required/><br>
-       <input type = "submit" value = "Add Event" />
+       End Time<input type = "number" name = "end_time" min="0" max="23"required/>
+       <input type = "submit" value = "Add Event" /><br><br>
     </form>
+    <form action = "http://localhost:5000/result" method = "POST">
+    Find Events Near: <input type = "text" name = "event_location" required/>
+    <input type = "submit" value = "Search" />
+    </form>
+    <ul style="list-style-type:none;">
+    {% for k in searched_events  %}
+        <li>{{k}}</li>
+    {% endfor %}
+    </ul>
 </body>
 </html>

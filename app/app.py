@@ -3,6 +3,8 @@ from flask_dance.contrib.google import make_google_blueprint, google
 from oauthlib.oauth2.rfc6749.errors import InvalidGrantError, TokenExpiredError, OAuth2Error
 import os
 from flask_sqlalchemy import SQLAlchemy
+import eventful
+api = eventful.API('test_key', cache='.cache')
 
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
@@ -89,10 +91,52 @@ def logout():
 def student():
     if not google.authorized:
         return redirect(url_for("google.login"))
-    return render_template('search.html')
+    return render_template('homepage.html')
+    
+    
+@app.route('/food')
+def food():
+    days={'sunday':0,'monday':1,'tuesday':2,'wednesday':3,'thursday':4,'friday':5,'saturday':6}
+    days2=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
+    if not google.authorized:
+        return redirect(url_for("google.login"))
+    try:
+        resp = google.get("/oauth2/v1/userinfo")
+        email = resp.json()['email']
+    #assert resp.ok, resp.text
+    except (InvalidGrantError, TokenExpiredError) as e:  # or maybe any OAuth2Error
+        return redirect(url_for("google.login"))
+    lists=[[] for i in range(7)]
+    events = Event.query.filter_by(email=email).all()
+    for i in events:
+        lists[days[i.day]]+=[[i.start_time,i.name,i.location]]
+    for i in range(7):
+        lists[i].sort()
+    #return str(lists)
+    foods={}
+    locations=[[] for i in range(7)]
+    for i in range(7):
+        locations[i]=lists[i][1:]
+        foods[days2[i]]=[]
+    s= ''
+    for i in range(len(lists)):
+        if len(lists[i])>1:
+            for j in range(1,len(lists[i])):
+                querystring = {"location":lists[i][j][2].replace(' ','+'),"term":"food", "radius": 100,"limit":3}
+                
+                response = requests.request("GET", url, headers=headers, params=querystring)
+                locations[i][j-1]+=[[k["name"] for k in response.json()['businesses']]]
+    for i in range(len(locations)):
+        for j in range(len(locations[i])):
+            foods[days2[i]]+=[{'location':locations[i][j][2],'places':locations[i][j][3]}]
+    return render_template('food.html',days=foods)
+    
 
 @app.route('/result',methods = ['POST', 'GET'])
 def result():
+    if not google.authorized:
+        return redirect(url_for("google.login"))
+    searched_events=[]
     days={'sunday':1,'monday':2,'tuesday':3,'wednesday':4,'thursday':5,'friday':6,'saturday':7}
     try:
         resp = google.get("/oauth2/v1/userinfo")
@@ -103,16 +147,21 @@ def result():
     if request.method == 'POST':
         
         result = request.form
-        event = Event(name=result['name'],location=result['location'],start_time=result['start_time'],end_time=result['end_time'],day=result['day'],email=email)
-        db.session.add(event)
-        db.session.commit()
+        if 'event_location' in result:
+            events = api.call('/events/search',l=result['event_location'])
+            for event in events['events']['event']:
+                searched_events+=["%s at %s starting at %s on %s" % (event['title'], event['venue_name'],event['start_time'].split(' ')[1][:5],event['start_time'].split(' ')[0][:10])]
+        else:
+            event = Event(name=result['name'],location=result['location'],start_time=result['start_time'],end_time=result['end_time'],day=result['day'],email=email)
+            db.session.add(event)
+            db.session.commit()
     table=[[str(i)+' hr','','','','','','',''] for i in range(24)]
     events = Event.query.filter_by(email=email).all()
     for i in events:
         table[i.start_time][days[i.day]]=i.name
     
         
-    return render_template("result.html",result = table)
+    return render_template("result.html",result = table, searched_events=searched_events)
 
 if __name__ == '__main__':
     app.run(debug=True)
@@ -121,7 +170,8 @@ if __name__ == '__main__':
     for j in range(24):
         
 
-querystring = {"location":"boston"}
+querystring = {"location":str(, "radius": 100}
 querystring['term'] = result['search']
+querystring['radius'] = 100
 response = requests.request("GET", url, headers=headers, params=querystring)
 s = (f'Name: {j["name"]}, Rating: {j["rating"]}, Phone: {j["phone"]}, Location: {j["location"]["address1"]}' for j in response.json()['businesses'])"""
