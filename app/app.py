@@ -180,7 +180,7 @@ def result():
     return render_template("result.html",result = table, searched_events=searched_events)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
 
 """for i in range(7):
     for j in range(24):
