@@ -15,6 +15,7 @@ import requests
 
 url = "https://api.yelp.com/v3/businesses/search"
 
+# Key and Blueprint for Google OAuth
 app.secret_key = "supersekrit"
 blueprint = make_google_blueprint(
     client_id="979961139202-n4lsu6bqsgbremebfk1trlkddji2a9i9.apps.googleusercontent.com",
@@ -25,6 +26,7 @@ blueprint = make_google_blueprint(
 
 )
 
+# Header for Yelp API
 headers = {
     'Authorization': "Bearer PPUb3qtJOlbheSDF063leUrTjuS94ewmKDXGSI9Fr83x20SiBrLNP35nJtE61TcUpxEfLK9oJ5qsFwojDxGU-37B7a_LKPC0GsnXgryjk59PkC3NGrQ2SrjsjfqpXXYx",
     'User-Agent': "PostmanRuntime/7.18.0",
@@ -39,11 +41,13 @@ headers = {
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 db = SQLAlchemy(app)
 
+# Object to add to User Table
 class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(200), nullable=False)
 
+# Object to Add to event table
 class Event(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
@@ -54,9 +58,10 @@ class Event(db.Model):
     day = db.Column(db.String(200), nullable=False)
     email = db.Column(db.String(200), nullable=False)
 
-
+# Register blueprint
 app.register_blueprint(blueprint, url_prefix="/login")
 
+# Login in page that registers new users
 @app.route("/app_login")
 def index():
     if not google.authorized:
@@ -79,7 +84,7 @@ def index():
         return f'There was an issue adding your user'
     return redirect(url_for('student'))
 
-
+# Logout page
 @app.route("/app_logout")
 def logout():
     if google.authorized:
@@ -87,13 +92,15 @@ def logout():
     return redirect("/")
 
 
+# Homepage
 @app.route('/')
 def student():
     if not google.authorized:
         return redirect(url_for("google.login"))
     return render_template('homepage.html')
     
-    
+
+# Page that displays your food options
 @app.route('/food')
 def food():
     days={'sunday':0,'monday':1,'tuesday':2,'wednesday':3,'thursday':4,'friday':5,'saturday':6}
@@ -107,18 +114,21 @@ def food():
     except (InvalidGrantError, TokenExpiredError) as e:  # or maybe any OAuth2Error
         return redirect(url_for("google.login"))
     lists=[[] for i in range(7)]
+    
+    # Get users events
     events = Event.query.filter_by(email=email).all()
     for i in events:
         lists[days[i.day]]+=[[i.start_time,i.name,i.location]]
     for i in range(7):
         lists[i].sort()
-    #return str(lists)
     foods={}
     locations=[[] for i in range(7)]
     for i in range(7):
         locations[i]=lists[i][1:]
         foods[days2[i]]=[]
     s= ''
+    
+    # Match food places with events throughout the day
     for i in range(len(lists)):
         if len(lists[i])>1:
             for j in range(1,len(lists[i])):
@@ -126,11 +136,15 @@ def food():
                 
                 response = requests.request("GET", url, headers=headers, params=querystring)
                 locations[i][j-1]+=[[k["name"] for k in response.json()['businesses']]]
+                
+    # format for html
     for i in range(len(locations)):
         for j in range(len(locations[i])):
             foods[days2[i]]+=[{'location':locations[i][j][2],'places':locations[i][j][3]}]
     return render_template('food.html',days=foods)
 
+
+# Events page
 @app.route('/result',methods = ['POST', 'GET'])
 def result():
     if not google.authorized:
@@ -145,6 +159,7 @@ def result():
         return redirect(url_for("google.login"))
     if request.method == 'POST':
         
+        # Add event
         result = request.form
         if 'event_location' in result:
             events = api.call('/events/search',l=result['event_location'])
@@ -154,6 +169,8 @@ def result():
             event = Event(name=result['name'],location=result['location'],start_time=result['start_time'],end_time=result['end_time'],day=result['day'],email=email)
             db.session.add(event)
             db.session.commit()
+            
+    # Display schedule
     table=[[str(i)+' hr','','','','','','',''] for i in range(24)]
     events = Event.query.filter_by(email=email).all()
     for i in events:
