@@ -1,7 +1,0 @@
-2. Happy Path:
-User clicks on ‘Log in’
-User is redirected to Google login page
-User inputs information
-If the wrong information is inputted, then a message will ask the user to double-check their information
-If the correct login information is inputted, then the User is redirected to our website and User’s weekly schedule is shown with the empty blocks of time highlighted 
-3. After listing the above diagram and path, our team has decided to use Flask as our architecture. We chose Flask mainly because Flask has multi-extension functions that covers a wide range of aspects of web app design, so we can stick with one framework. The reason why we stick with Flask is because we are most comfortable using Python, and one of our members has experience using this platform. So the rest of us can learn this architecture, under a relatively safe situation, where we won’t find things totally not working out in the future. Considering the size of this project, Flask is more flexible in handling smaller projects while Django and others are too complicated for this. 
