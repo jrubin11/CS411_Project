@@ -1,6 +1,6 @@
 # CS411_Project
 Member: Joshua Rubin, Bailey Tang, Shalei Kumar, Xiaowen Wu
-# Group 2 Food
+# Group 2 Food?
 ## Introduction
   Group 2 Food is a web applicaton that allows the users to input their schedule and design the ideal time and location for them to get food.
 ## Team Assignment
@@ -18,3 +18,14 @@ Team Assignment 5: OAuth is under the OAuth branch
 * Framework: Flask
 * API: Yelp, Eventful
 * Database: SQLite
+## Designing Timeline
+* Calling the Yelp API
+* User Authentication
+* Adding the Eventful API
+* Putting up the schedule upload function
+* Creating the database
+* Front end design
+* Final touch up
+## More to do...
+* Set up preference profile
+* Enable e-mail notification 
