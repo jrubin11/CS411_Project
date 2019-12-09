@@ -26,3 +26,6 @@ Team Assignment 5: OAuth is under the OAuth branch
 * Creating the database
 * Front end design
 * Final touch up
+## More to do...
+* Set up preference profile
+* Enable e-mail notification 
